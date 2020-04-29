@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: springbootrs
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: springboot
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 30 
+  template: 
+    metadata:
+      name: springbootpod
+      labels: 
+        app: springboot
+    spec: 
+      containers:
+      - name: springbootcontainer
+        image: venuprathap/spring-boot-mongo:2
+        ports:
+        - name: javawebapp
+          containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: springbootelb
+spec:
+  selector:
+    app: springboot
+  type: LoadBalancer
+  ports:
+  - port: 8080
+    targetPort: 8080

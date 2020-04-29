@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: ReplicationController
+metadata: 
+  name: javawebrc
+spec:
+  replicas: 2
+  selector: 
+    app: javawebapp
+  template: 
+    metadata:
+      name: javawebapppod
+      labels: 
+        app: javawebapp
+    spec: 
+      containers:
+      - name: javawebappcontainer
+        image: venuprathap/java-web-app:2
+        ports:
+        - name: javawebapp
+          containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: javawebelb
+spec:
+  selector:
+    app: javawebapp
+  type: LoadBalancer
+  ports:
+  - port: 8080
+    targetPort: 8080
